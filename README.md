@@ -6,8 +6,9 @@
 
 - Подготовка данных: чтение `train.csv` и `test.csv`, разделение признаков на числовые и категориальные, масштабирование и one-hot encoding.
 - Единый хаб для экспериментов: класс `modelsHub` считает метрики на Stratified K-Fold, сравнивает модели и ведёт leaderboard.
-- Бейзлайн и сильные модели: Logistic Regression, Random Forest, CatBoost и LightGBM.
-- Подбор гиперпараметров: перебор сетки параметров для tree-based моделей.
+- Бейзлайн и сильные модели: Logistic Regression, Random Forest, CatBoost, LightGBM и XGBoost.
+- Подбор гиперпараметров: grid search для части моделей и Optuna для XGBoost и мета-моделей в стекинге.
+- Стекинг: реализованы два варианта мета-модели (`StackingLogReg` и `StackingLightGBM`).
 - Сохранение артефактов: обученные модели складываются в папку `saved models/`.
 ## Где что находится
 
@@ -28,9 +29,12 @@
 
 ### Сохранённые модели лучшие модели
 
-- `saved models/best_model.joblib`
+- `saved models/random_forest.joblib`
 - `saved models/catboost_model.cbm`
 - `saved models/lightgbm.joblib`
+- `saved models/xgboost.joblib`
+- `saved models/stack_logreg.joblib`
+- `saved models/stack_lightgbm.joblib`
 
 ## Как это работает
 
@@ -51,16 +55,31 @@
 Пример установки зависимостей:
 
 ```bash
-pip install pandas numpy scikit-learn catboost lightgbm joblib tqdm
+pip install pandas numpy scikit-learn catboost lightgbm xgboost optuna joblib tqdm
 ```
 
 ## Что можно улучшить дальше
 
-- добавить `XGBoost` для сравнения с текущими моделями;
-- сделать стекинг или блендинг лучших моделей;
-- вынести preprocessing и inference в отдельный `.py`-скрипт;
-- добавить автоматическую генерацию submission одним запуском.
+- протестировать threshold tuning под целевую бизнес-метрику (например, упор на recall);
+- добавить SHAP-анализ для интерпретации причин оттока;
+- вынести пайплайн обучения и инференса в отдельные `.py`-скрипты/CLI;
+- сделать небольшой experiment-tracker (логирование экспериментов в csv/json + автосохранение лучших конфигов).
 
 ## Итоги
 
-to be continued...
+По итоговой таблице получился плотный топ моделей по `ROC-AUC`: почти все сильные решения находятся в диапазоне ~`0.916`.
+
+Коротко по наблюдениям:
+
+- Лидер по качеству: `XGBClassifier (loaded)` с `ROC-AUC = 0.9166` и `F1 = 0.6763`.
+- `CatBoostClassifier (loaded)` показал практически такое же качество (`ROC-AUC = 0.9166`), разница минимальная.
+- `LightGBM (loaded)` тоже рядом (`ROC-AUC = 0.9166`) и с очень близким `F1 = 0.6764`.
+- `StackingLightGBM` не обошёл лучшие одиночные модели по `ROC-AUC` (`0.9160`) и просел по `recall`.
+- `StackingLogReg` дал лучший `recall` (`0.8142`) и лучший `F1` (`0.7000`) среди показанных запусков, но при этом уступил по `accuracy` и `ROC-AUC`.
+
+Вывод для текущей версии проекта:
+
+- если нужен лучший универсальный баланс по ранжированию, разумно брать `XGBoost/CatBoost/LightGBM` (они почти эквивалентны по `ROC-AUC`);
+- если приоритет поймать максимум уходящих клиентов, стек с логрегой как мета-моделью интересен за счёт высокого `recall`;
+
+Для пет-проекта результат считаю хорошим: получилось собрать несколько сильных baseline+boosting решений, сравнить их в едином leaderboard и проверить, где стекинг реально помогает, а где нет.
