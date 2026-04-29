@@ -4,22 +4,40 @@
 
 ## Что реализовано
 
+### Полная версия (ноутбук `analyze.ipynb`)
 - Подготовка данных: чтение `train.csv` и `test.csv`, разделение признаков на числовые и категориальные, масштабирование и one-hot encoding.
 - Единый хаб для экспериментов: класс `modelsHub` считает метрики на Stratified K-Fold, сравнивает модели и ведёт leaderboard.
 - Бейзлайн и сильные модели: Logistic Regression, Random Forest, CatBoost, LightGBM и XGBoost.
 - Подбор гиперпараметров: grid search для части моделей и Optuna для XGBoost и мета-моделей в стекинге.
-- Стекинг: реализованы два варианта мета-модели (`StackingLogReg` и `StackingLightGBM`).
+- **Стекинг**: реализованы два варианта мета-модели (`StackingLogReg` и `StackingLightGBM`).
+- Интерпретация признаков: SHAP анализ для понимания вклада каждого признака в предсказания модели.
 - Сохранение артефактов: обученные модели складываются в папку `saved models/`.
+
+### Упрощённая версия (CLI скрипты)
+- CLI entrypoint: единый скрипт `scripts/main.py` для обучения моделей и создания predictions.
+- 4 базовые модели (без стекинга): XGBClassifier, CatBoostClassifier, LightGBM, RandomForestClassifier, LogisticRegression.
+- Модульная архитектура: логика обучения (`src/train.py`), предсказания (`src/predict.py`), загрузки данных (`src/data.py`).
+
 ## Где что находится
 
 ### Основной ноутбук
 
-Вся логика проекта собрана в [analyze.ipynb](analyze.ipynb).
+[analyze.ipynb](analyze.ipynb) — содержит полный пайплайн с интерпретацией признаков, подбором параметров и стекингом.
 
 - Импорты, загрузка данных и первичная подготовка находятся в начале ноутбука.
 - Класс `modelsHub`, который отвечает за кросс-валидацию, метрики и leaderboard, находится в блоке `Создание Baseline`.
-- Эксперименты с `RandomForestClassifier`, `CatBoostClassifier` и `LGBMClassifier` идут отдельными секциями ниже.
-- Код для сохранения моделей и построения submission-файла расположен в конце ноутбука.
+- Эксперименты с `RandomForestClassifier`, `CatBoostClassifier`, `LGBMClassifier` и `XGBClassifier` идут отдельными секциями.
+- SHAP анализ и интерпретация признаков.
+- Код для построения стекинга (`StackingLogReg`, `StackingLightGBM`) и создания submission-файла в конце ноутбука.
+
+### CLI скрипты
+
+[scripts/main.py](scripts/main.py) — единый entrypoint для обучения и предсказания.
+
+Модули в папке `src/`:
+- [src/train.py](src/train.py) — обучение моделей (5 моделей без стекинга).
+- [src/predict.py](src/predict.py) — создание predictions и submission.
+- [src/data.py](src/data.py) — загрузка и препроцессинг данных.
 
 ### Данные
 
@@ -38,32 +56,59 @@
 
 ## Как это работает
 
+### Полная версия (ноутбук)
+
 1. Данные читаются из `data/`.
 2. Признаки разделяются на числовые и категориальные.
 3. Препроцессор приводит данные к виду, удобному для моделей.
-4. `modelsHub` прогоняет кросс-валидацию и считает accuracy, precision, recall, f1 и ROC-AUC.
-5. Для выбранной модели подбираются параметры.
-6. Лучшая модель сохраняется в `saved models/`.
-7. На тесте строятся вероятности и формируется submission.
+4. `modelsHub` прогоняет кросс-валидацию и считает метрики.
+5. Для выбранных моделей подбираются параметры (grid search, Optuna).
+6. Строится стекинг с двумя мета-моделями.
+
+### Упрощённая версия (CLI)
+
+1. Скрипт `scripts/main.py` принимает параметры командной строки.
+2. Режим `--mode train` обучает выбранную модель на данных из `--data-dir`.
+3. Обученная модель сохраняется в `--models-dir`.
+4. Режим `--mode predict` загружает модель и создаёт predictions на тесте.
+5. Submission сохраняется в `--output-dir`.
 
 ## Как запустить
 
-1. Установить зависимости.
-2. Открыть [analyze.ipynb](analyze.ipynb) и выполнить ячейки сверху вниз.
-3. После обучения модели создать submission через финальную ячейку.
-
-Пример установки зависимостей:
+### Установка зависимостей
 
 ```bash
-pip install pandas numpy scikit-learn catboost lightgbm xgboost optuna joblib tqdm
+pip install pandas numpy scikit-learn catboost lightgbm xgboost optuna joblib tqdm shap
 ```
 
-## Что можно улучшить дальше
+### Полная версия (ноутбук)
 
-- протестировать threshold tuning под целевую бизнес-метрику (например, упор на recall);
-- добавить SHAP-анализ для интерпретации причин оттока;
-- вынести пайплайн обучения и инференса в отдельные `.py`-скрипты/CLI;
-- сделать небольшой experiment-tracker (логирование экспериментов в csv/json + автосохранение лучших конфигов).
+1. Открыть [analyze.ipynb](analyze.ipynb) и выполнить ячейки сверху вниз :)
+
+### Упрощённая версия (CLI)
+
+**Обучение модели:**
+```bash
+python scripts/main.py --mode train --model XGBClassifier --data-dir data --models-dir "saved models"
+python scripts/main.py --mode train --model CatBoostClassifier
+python scripts/main.py --mode train --model LightGBM
+python scripts/main.py --mode train --model RandomForestClassifier
+python scripts/main.py --mode train --model LogisticRegression
+```
+
+**Создание predict:**
+```bash
+python scripts/main.py --mode predict --data-dir data --model-path "saved models/xgboost.joblib" --output-dir .
+```
+
+**Доступные параметры:**
+- `--mode` — режим работы: `train` или `predict` (по умолчанию `predict`)
+- `--model` — название модели для обучения (XGBClassifier, CatBoostClassifier, LightGBM, RandomForestClassifier, LogisticRegression)
+- `--data-dir` — папка с `train.csv` и `test.csv` (по умолчанию `data`)
+- `--model-path` — путь к сохранённой модели для prediction (по умолчанию `saved models/xgboost.joblib`)
+- `--models-dir` — папка для сохранения обученных моделей (по умолчанию `saved models`)
+- `--output-dir` — папка для сохранения `submission.csv` (по умолчанию текущая папка)
+
 
 ## Итоги
 
@@ -76,10 +121,3 @@ pip install pandas numpy scikit-learn catboost lightgbm xgboost optuna joblib tq
 - `LightGBM (loaded)` тоже рядом (`ROC-AUC = 0.9166`) и с очень близким `F1 = 0.6764`.
 - `StackingLightGBM` не обошёл лучшие одиночные модели по `ROC-AUC` (`0.9160`) и просел по `recall`.
 - `StackingLogReg` дал лучший `recall` (`0.8142`) и лучший `F1` (`0.7000`) среди показанных запусков, но при этом уступил по `accuracy` и `ROC-AUC`.
-
-Вывод для текущей версии проекта:
-
-- если нужен лучший универсальный баланс по ранжированию, разумно брать `XGBoost/CatBoost/LightGBM` (они почти эквивалентны по `ROC-AUC`);
-- если приоритет поймать максимум уходящих клиентов, стек с логрегой как мета-моделью интересен за счёт высокого `recall`;
-
-Для пет-проекта результат считаю хорошим: получилось собрать несколько сильных baseline+boosting решений, сравнить их в едином leaderboard и проверить, где стекинг реально помогает, а где нет.
