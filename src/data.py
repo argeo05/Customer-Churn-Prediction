@@ -2,15 +2,15 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
+from pathlib import Path
 
 RANDOM_STATE = 42
 
 
-def load_and_preprocess():
-    """Загружает и подготавливает данные для обучения и тестирования"""
-    
-    train = pd.read_csv('data/train.csv')
-    test = pd.read_csv('data/test.csv')
+def load_and_preprocess(data_dir='data', train_file='train.csv', test_file='test.csv'):
+    data_dir = Path(data_dir)
+    train = pd.read_csv(data_dir / train_file)
+    test = pd.read_csv(data_dir / test_file)
     
     X = train.drop(columns=['id', 'Churn'])
     y = train['Churn'].map({'No': 0, 'Yes': 1}).to_numpy()
