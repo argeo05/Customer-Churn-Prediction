@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 5173
+EXPOSE 5174
 
-CMD nom run dev -- --host
+CMD npm run dev -- --host

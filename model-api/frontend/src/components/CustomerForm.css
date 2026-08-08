@@ -1,0 +1,347 @@
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 28px;
+    align-items: start;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.field label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--hw-text-secondary);
+    text-transform: uppercase;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: help;
+}
+
+.field label::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 320px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--hw-black);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: pre-wrap;
+    text-align: left;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.field label::before {
+    content: "";
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--hw-black);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 101;
+}
+
+.field label:hover::after,
+.field label:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--hw-border);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    color: var(--hw-text);
+    background: var(--hw-surface);
+    transition: all var(--transition-base);
+    outline: none;
+}
+
+.field input {
+    padding-right: 44px;
+}
+
+.field select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 44px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235a5f66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 20px;
+}
+
+.field select:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23cf0a2c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.field input:hover,
+.field select:hover {
+    border-color: #c8ccd2;
+    background: var(--hw-surface-hover);
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: var(--hw-red);
+    box-shadow:
+        0 0 0 4px var(--hw-red-soft),
+        0 4px 16px rgba(207, 10, 44, 0.12);
+    background: var(--hw-surface);
+}
+
+.field input:disabled,
+.field select:disabled {
+    background: var(--hw-border-light);
+    color: var(--hw-text-muted);
+    cursor: not-allowed;
+    border-color: var(--hw-border-light);
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+form h2.section-title {
+    grid-column: span 2;
+    position: relative;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--hw-black);
+    margin: 8px 0 4px;
+    padding: 4px 0 12px 18px;
+    border-bottom: 1px solid var(--hw-border-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+form h2.section-title:first-of-type {
+    margin-top: 0;
+}
+
+form h2.section-title::before {
+    content: "";
+    width: 5px;
+    height: 22px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, var(--hw-red-light), var(--hw-red));
+    flex-shrink: 0;
+}
+
+form h2.section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--hw-border-light), transparent);
+    margin-left: 8px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.actions {
+    grid-column: span 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--hw-border-light);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 32px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    min-width: 180px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--hw-red) 0%, var(--hw-red-dark) 100%);
+    color: #fff;
+    box-shadow:
+        0 4px 20px var(--hw-red-glow),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 28px var(--hw-red-glow),
+        0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.btn-primary:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow:
+        0 2px 10px var(--hw-red-glow),
+        0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:focus-visible {
+    outline: 2px solid var(--hw-red);
+    outline-offset: 3px;
+}
+
+.result-wrapper {
+    grid-column: span 2;
+    animation: slideUp 0.4s var(--transition-slow);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px 28px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+}
+
+.result-low {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border-color: #a7f3d0;
+}
+
+.result-mid {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef9c3 100%);
+    border-color: #fde68a;
+}
+
+.result-high {
+    background: linear-gradient(135deg, var(--hw-red-soft) 0%, rgba(207, 10, 44, 0.04) 100%);
+    border-color: rgba(207, 10, 44, 0.25);
+}
+
+.result-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--hw-text-secondary);
+}
+
+.result-low .result-label { color: #047857; }
+.result-mid .result-label { color: #b45309; }
+.result-high .result-label { color: var(--hw-red); }
+
+.result-value {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+}
+
+.result-low .result-value { color: #047857; }
+.result-mid .result-value { color: #b45309; }
+.result-high .result-value { color: var(--hw-red); }
+
+.result-progress {
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.result-progress-bar {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.result-low .result-progress-bar {
+    background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.result-mid .result-progress-bar {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.result-high .result-progress-bar {
+    background: linear-gradient(90deg, var(--hw-red), var(--hw-red-light));
+}
+
+@media (max-width: 640px) {
+    form {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .full-width,
+    form h2.section-title,
+    .actions,
+    .result-wrapper {
+        grid-column: span 1;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
