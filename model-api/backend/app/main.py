@@ -16,5 +16,6 @@ async def read_root():
 async def predict(request: PredictionRequest):
     data = pd.DataFrame([request.model_dump()])
     X = preprocessor.transform(data)
-
-
+    print(type(model))
+    pred = float(model.predict_proba(X)[0, 1])
+    return pred

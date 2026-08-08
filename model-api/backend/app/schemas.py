@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class PredictionRequest(BaseModel):
-    id: str
     gender: Literal["Male", "Female"]
     SeniorCitizen: Literal[0, 1]
     Partner: Literal["Yes", "No"]
