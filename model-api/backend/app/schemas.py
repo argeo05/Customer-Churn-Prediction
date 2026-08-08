@@ -3,20 +3,6 @@ from typing import Literal
 from pydantic import BaseModel
 
 
-class PredictionRequest(BaseModel):
-    model: Literal[
-        "catboost", 
-        "xgboost", 
-        "random_forest", 
-        "stack_logreg", 
-        "stack_lightgbm",
-        "logistic_regression"
-    ]
-    customer: Customer
-
-class PredictionResponse(BaseModel):
-    probability: float
-
 class Customer(BaseModel):
     gender: Literal["Male", "Female"]
     SeniorCitizen: Literal[0, 1]
@@ -78,3 +64,18 @@ class Customer(BaseModel):
     ]
     MonthlyCharges: float
     TotalCharges: float
+
+class PredictionRequest(BaseModel):
+    model: Literal[
+        "catboost", 
+        "xgboost", 
+        "random_forest", 
+        "stack_logreg", 
+        "stack_lightgbm",
+        "logistic_regression"
+    ]
+    customer: Customer
+
+class PredictionResponse(BaseModel):
+    probability: float
+

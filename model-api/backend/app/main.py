@@ -7,11 +7,6 @@ from app.model import models, preprocessor
 
 app = FastAPI()
 
-@app.get("/")
-async def read_root():
-    return {"message": "Hello, World!"}
-
-
 @app.post(
         "/predict",
         response_model=PredictionResponse
