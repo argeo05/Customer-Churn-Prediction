@@ -1,6 +1,9 @@
+import pandas as pd
+
 from fastapi import FastAPI
 
 from app.schemas import PredictionRequest
+from app.model import model, preprocessor
 
 app = FastAPI()
 
@@ -11,5 +14,7 @@ async def read_root():
 
 @app.post("/predict")
 async def predict(request: PredictionRequest):
-    return {"prediction": f"Predicted value for age {request.age}, salary {request.salary}, experience {request.experience}"}
+    data = pd.DataFrame([request.model_dump()])
+    X = preprocessor.transform(data)
+
 
