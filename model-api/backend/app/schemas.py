@@ -4,9 +4,16 @@ from pydantic import BaseModel
 
 
 class PredictionRequest(BaseModel):
-    model: Literal["catboost", "xgboost", "random_forest", "stack_logreg", "stack_lightgbm"]
+    model: Literal[
+        "catboost", 
+        "xgboost", 
+        "random_forest", 
+        "stack_logreg", 
+        "stack_lightgbm",
+        "logistic_regression"
+    ]
     customer: Customer
-    
+
 class Customer(BaseModel):
     gender: Literal["Male", "Female"]
     SeniorCitizen: Literal[0, 1]
