@@ -14,6 +14,9 @@ class PredictionRequest(BaseModel):
     ]
     customer: Customer
 
+class PredictionResponse(BaseModel):
+    probability: float
+
 class Customer(BaseModel):
     gender: Literal["Male", "Female"]
     SeniorCitizen: Literal[0, 1]

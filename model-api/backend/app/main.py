@@ -2,7 +2,7 @@ import pandas as pd
 
 from fastapi import FastAPI
 
-from app.schemas import PredictionRequest
+from app.schemas import PredictionRequest, PredictionResponse
 from app.model import models, preprocessor
 
 app = FastAPI()
@@ -12,8 +12,11 @@ async def read_root():
     return {"message": "Hello, World!"}
 
 
-@app.post("/predict")
-async def predict(request: PredictionRequest):
+@app.post(
+        "/predict",
+        response_model=PredictionResponse
+)
+async def predict(request: PredictionRequest) -> PredictionResponse:
     data = pd.DataFrame([request.customer.model_dump()])
     X = preprocessor.transform(data)
 
@@ -30,4 +33,4 @@ async def predict(request: PredictionRequest):
 
         pred = float(models["stack_logreg"].predict_proba(stack_input)[0, 1])
 
-    return {"probability": pred}
+    return PredictionResponse(probability=pred)
