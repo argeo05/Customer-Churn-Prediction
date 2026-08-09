@@ -1,0 +1,38 @@
+name: test and build
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./model-api/backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements-dev.txt
+      - run: pytest
+
+  docker-build:
+    runs-on: ubuntu-latest
+
+    needs:
+      - backend-test
+      
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: docker build -t backend ./model-api/backend
+      - run: docker build -t frontend ./model-api/frontend

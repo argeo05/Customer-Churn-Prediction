@@ -16,6 +16,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root() -> dict[str, str]:
+    return {"message": "API works!"}
+
 @app.post(
         "/predict",
         response_model=PredictionResponse
