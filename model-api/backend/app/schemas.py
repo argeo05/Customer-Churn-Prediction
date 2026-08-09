@@ -71,8 +71,8 @@ class PredictionRequest(BaseModel):
         "xgboost", 
         "random_forest", 
         "stack_logreg", 
-        "stack_lightgbm",
-        "logistic_regression"
+        "logistic_regression",
+        "lightgbm"
     ]
     customer: Customer
 
