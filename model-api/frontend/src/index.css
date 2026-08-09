@@ -1,0 +1,99 @@
+:root {
+    --hw-red: #cf0a2c;
+    --hw-red-dark: #a30a23;
+    --hw-red-light: #ff4d68;
+    --hw-red-soft: rgba(207, 10, 44, 0.08);
+    --hw-red-glow: rgba(207, 10, 44, 0.25);
+    --hw-black: #232527;
+    --hw-text: #1a1c1e;
+    --hw-text-secondary: #5a5f66;
+    --hw-text-muted: #8b9098;
+    --hw-border: #e1e3e6;
+    --hw-border-light: #edf0f2;
+    --hw-surface: #ffffff;
+    --hw-surface-hover: #fafbfc;
+    --hw-bg: #0d0e10;
+    --hw-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+    --hw-card-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --transition-fast: 120ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+body {
+    font-family: "HarmonyOS Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--hw-text);
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(207, 10, 44, 0.12), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 85% 10%, rgba(207, 10, 44, 0.08), transparent 50%),
+        radial-gradient(ellipse 50% 30% at 10% 90%, rgba(207, 10, 44, 0.06), transparent 45%),
+        linear-gradient(180deg, #141517 0%, #0d0e10 50%, #0a0b0c 100%);
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+::selection {
+    background: var(--hw-red-soft);
+    color: var(--hw-red);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--hw-red), var(--hw-red-dark));
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--hw-red-dark), #8b081e);
+}
+
+@font-face {
+    font-family: "HarmonyOS Sans";
+    src: local("Inter");
+    font-weight: 300 700;
+    font-display: swap;
+}
