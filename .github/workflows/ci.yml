@@ -30,8 +30,7 @@ jobs:
 
     needs:
       - backend-test
-      - frontend-test
-
+      
     steps:
       - uses: actions/checkout@v4
 
